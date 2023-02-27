@@ -1,5 +1,4 @@
 import * as game from "./madnGame.mjs"
-
 import * as fs from 'fs';
 
 let rawdata = fs.readFileSync('test0.json');
@@ -27,7 +26,9 @@ for (let i = 0; i < test0.length; i++) {
         console.log(`\x1b[31m${"unvalid action:"}\x1b[0m`);
         console.log(result);
         console.log(gameObject);
-    }
+    }else
+    console.log(`result:`);
+    console.log(result)
 }
 
 console.log(gameObject);

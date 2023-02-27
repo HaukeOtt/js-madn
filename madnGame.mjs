@@ -1,4 +1,4 @@
-export function createGameObject(numOfPlayers) {
+export function createGameObject(numOfPlayers, dicetemplate) {
     /*
     infos:
         pawn position: 
@@ -15,10 +15,12 @@ export function createGameObject(numOfPlayers) {
     let numOfPawns = 4
     let playerNums = [null, null, null, null]
     let dice = [1, 2, 3, 4, 5, 6]
+    let playerOffset = 10;
 
     //setting playernumbers
     switch (numOfPlayers) {
         case 2:
+            //if only 2 players are playing, they are starting on opeside sides
             playerNums = [0, null, 1, null]
             break;
         default:
@@ -29,8 +31,15 @@ export function createGameObject(numOfPlayers) {
     }
 
     //create standart gameObject
-    let gameObject = { playerInLine: 0, inputState: 1, temp: {}, players: [], dice: dice };
-
+    let gameObject = {
+        playerInLine: 0,
+        inputState: 1,
+        temp: {},
+        players: [],
+        dice: dice,
+        playerOffset: playerOffset,
+        dicetemplate: dicetemplate
+    };
 
     //setting standart gameObject.players
     for (let i = 0; i < numOfPlayslots; i++) {
@@ -39,19 +48,25 @@ export function createGameObject(numOfPlayers) {
 
         //create standart pawnpositions
         for (let j = 0; j < numOfPawns; j++) {
-            gameObject.players[i].pawns[j] = { Pos: j }
+            gameObject.players[i].pawns[j] = { pos: j }
         }
     }
 
 
     // role dice and store
-    gameObject.temp.dicevelue = roleDice(gameObject.dice);
+    gameObject.temp.dicevelue = roleDice(gameObject.dice, gameObject.dicetemplate);
     gameObject.players[getPlayerIndexByNum(gameObject.players, gameObject.playerInLine)].lastDiceValue = gameObject.temp.dicevelue;
 
     return gameObject;
 }
 
-function roleDice(dice) {
+function roleDice(dice, dicetemplate) {
+    //if exist return dice-value from dicetemplate
+    if (dicetemplate[0]) {
+        let dicetemplateValue = dicetemplate.shift();
+        return dicetemplateValue;
+    }
+
     if (!dice) {
         dice = [1, 2, 3, 4, 5, 6];
     }
@@ -65,6 +80,16 @@ function getPlayerIndexByNum(players, num) {
         }
 
     }
+}
+
+function getPawnFromRelativePosition(gameObject, playerIndex, pos) {
+    for (let i = 0; i < gameObject.players[playerIndex].pawns.length; i++) {
+        const pawn = gameObject.players[playerIndex].pawns[i];
+        if (pawn.pos == pos) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 export function handleAction(gameObject, action) {
@@ -111,7 +136,7 @@ function handleInput1(gameObject, action) {
     //if a player has not yet roled the dice, he have to role the dice
     if (lowestPlayerNumWithoutDiceValue) {
         gameObject.playerInLine = lowestPlayerNumWithoutDiceValue;
-        gameObject.temp.dicevelue = roleDice(gameObject.dice);
+        gameObject.temp.dicevelue = roleDice(gameObject.dice, gameObject.dicetemplate);
         gameObject.players[
             getPlayerIndexByNum(gameObject.players, lowestPlayerNumWithoutDiceValue)
         ].lastDiceValue = gameObject.temp.dicevelue;
@@ -137,8 +162,9 @@ function handleInput1(gameObject, action) {
             }
         }
     }
+
     //role the dice for player in line
-    gameObject.temp.dicevelue = roleDice(gameObject.dice);
+    gameObject.temp.dicevelue = roleDice(gameObject.dice, gameObject.dicetemplate);
     gameObject.players[
         getPlayerIndexByNum(gameObject.players, playerNumWithHighestDiceValue)
     ].lastDiceValue = gameObject.temp.dicevelue;
@@ -152,6 +178,36 @@ function handleInput1(gameObject, action) {
 };
 
 function handleInput2(gameObject, action) {
+
+    if (action.type != gameObject.inputState) {
+        return { ok: false, msg: "wrong action type" }
+    }
+
+    if (action.playerNum != gameObject.playerInLine) {
+        return { ok: false, msg: "wrong player" }
+    }
+
+    
+
+    if (gameObject.players[gameObject.playerInLine].lastDiceValue == 6) {
+        
+        let parkingPawns = []
+        //chack if starting field is free
+        if (getPawnFromRelativePosition(gameObject, gameObject.playerInLine, 4) == -1) {
+            console.log("starting field is free");
+        }
+
+        for (let i = 0; i < gameObject.players[gameObject.playerInLine].pawns.length; i++) {
+            const pawn = gameObject.players[gameObject.playerInLine].pawns[i];
+            // check which pown is on a parking field
+            if (pawn.pos >= 0 && pawn.pos <= 3) {
+
+
+                parkingPawns.push(i);
+            }
+        }
+
+    }
 
     return { ok: true };
 }
