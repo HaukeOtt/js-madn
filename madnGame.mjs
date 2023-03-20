@@ -384,7 +384,7 @@ function handleInput3(gameObject, action) {
     //move pawn
 
     let indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine)
-    let posToMoveTo = gameObject.temp.positionsWhenMoved[pawnToMove];
+    let posToMoveTo = gameObject.temp.positionsWhenMoved[action.value];
     gameObject.players[indexOfPlayerInLine]
         .pawns[pawnToMove].pos = posToMoveTo;
 
