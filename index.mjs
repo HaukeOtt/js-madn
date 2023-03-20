@@ -7,7 +7,7 @@ let test0 = JSON.parse(rawdata);
 let rawdata1 = fs.readFileSync('dicePettern0.json');
 let dicetemplate = JSON.parse(rawdata1);
 
-const PLAYER = 2
+const PLAYER =  4;
 
 let gameObject = game.createGameObject(PLAYER, dicetemplate);
 console.log(gameObject);
