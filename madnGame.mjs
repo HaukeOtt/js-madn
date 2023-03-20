@@ -354,7 +354,7 @@ function handleInput2(gameObject, action) {
         }
 
         gameObject.inputState = 3;
-        gameObject.temp.moveablepawns =  parkingPawns;
+        gameObject.temp.moveablepawns =  moveablepawns;
         gameObject.temp.positionsWhenMoved = positionsWhenMoved;
         return { ok: true };
     }
