@@ -12,7 +12,8 @@ export function createGameObject(numOfPlayers, dicetemplate) {
             2   player in line has to start the game and role his dice value
             3   player has to select the pawn he want to move
             4   player accapt, that no pawn can be moved
-            */
+
+    */
     //setting porpertys
     let numOfPlayslots = 4
     let numOfPawns = 4
@@ -101,7 +102,6 @@ function getPawnFromRelativePosition(gameObject, playerIndex, pos) {
 function convertePosition(pos, fromPlayerI, toPlayerI) {
     let fromPos = pos - 4;
     let absolutePos = (fromPos + 10 * fromPlayerI) % 40;
-    console.log(`absolute pos: ${absolutePos}`);
     let toPos = ((absolutePos - 10 * toPlayerI) % 40 + 40) % 40;
     return toPos + 4;
 }
