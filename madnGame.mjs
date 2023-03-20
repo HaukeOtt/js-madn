@@ -155,7 +155,7 @@ export function handleAction(gameObject, action) {
         case 3:
             result = handleInput3(gameObject, action);
             break;
-        case 4: 
+        case 4:
             result = handleInput4(gameObject, action);
         default:
             result = { ok: false, msg: "action type dose not exist" };
@@ -302,15 +302,25 @@ function handleInput2(gameObject, action) {
     else {
         let moveablepawns = []
         let positionsWhenMoved = [];
+        let reasonForNoActionMoveablepawns = 0;
         for (let index = 0; index < gameObject.players[gameObject.playerInLine].pawns.length; index++) {
             const pawn = gameObject.players[gameObject.playerInLine].pawns[index];
+
+            //check if on parkingfield
             if (pawn.pos > 3) {
+                if (reasonForNoActionMoveablepawns == 0) {
+                    reasonForNoActionMoveablepawns = 1;
+                }
                 continue;
             }
 
+            //check if would kick own figure or end of playfield
             let positionWhenMoved = pawn.pos + gameObject.players[gameObject.playerInLine].lastDiceValue
             let pawnOnPositionWhenMoved = getPawnFromRelativePosition(gameObject, gameObject.playerInLine, positionWhenMoved);
             if (pawnOnPositionWhenMoved != -1) {
+                if (reasonForNoActionMoveablepawns != 2) {
+                    reasonForNoActionMoveablepawns = 2;
+                }
                 continue;
             }
 
@@ -320,7 +330,20 @@ function handleInput2(gameObject, action) {
 
         if (moveablepawns.length == 0) {
             // no pawn can be moved
-            gameObject.temp = { msg: "es kann keine figur bewegt werden, da die figur die bewegt werden soll sollte, blockiert wird" };
+
+            //insert message
+            let msg = "unbekannter Fehler";
+            switch (reasonForNoActionMoveablepawns) {
+                case 1:
+                    msg = "keine figur auf dem spielfeld, die bewegt werden kann"
+                    break;
+                case 2:
+                    msg = "es kann keine figur bewegt werden, da die Figur die sich bewegt werden kann, blockiert wird"
+                    break;
+                default:
+                    break;
+            }
+            gameObject.temp = { msg: msg };
 
             //input 4: player accapt, that no pawn can be moved
             gameObject.inputState = 4;
