@@ -2,20 +2,22 @@ export function createGameObject(numOfPlayers, dicetemplate) {
     /*
     infos:
         pawn position: 
-            (0-3)   parking fields (the fields were the powns stand at the start of the geme),
-            (4-43)  open field (4 is the field the pown starts after a six was rolled on the dice and 43 is the last field, every player can move powns on),
-            (44-47) finisching fields (the four that heve to be fiels with powns to win the game)
+            (0-3)   parking fields (the fields were the pawns stand at the start of the geme),
+            (4-43)  open field (4 is the field the pawn starts after a six was rolled on the dice and 43 is the last field, every player can move pawns on),
+            (44-47) finisching fields (the four that heve to be fiels with pawns to win the game)
         
         inputState:
-            1   weiting for dice clicked 
-            2
+            0   no input will be accepted right now
+            1   next player have to role the dice, to decide the player how starts
+            2   player in line has to start the game and role his dice value
+            3   player has to select the pawn he want to move
+            4   player accapt, that no pawn can be moved
             */
     //setting porpertys
     let numOfPlayslots = 4
     let numOfPawns = 4
     let playerNums = [null, null, null, null]
     let dice = [1, 2, 3, 4, 5, 6]
-    let playerOffset = 10;
 
     //setting playernumbers
     switch (numOfPlayers) {
@@ -37,8 +39,8 @@ export function createGameObject(numOfPlayers, dicetemplate) {
         temp: {},
         players: [],
         dice: dice,
-        playerOffset: playerOffset,
-        dicetemplate: dicetemplate
+        dicetemplate: dicetemplate,
+        winner: -1
     };
 
     //setting standart gameObject.players
@@ -96,6 +98,51 @@ function getPawnFromRelativePosition(gameObject, playerIndex, pos) {
     return -1;
 }
 
+function convertePosition(pos, fromPlayerI, toPlayerI) {
+    let fromPos = pos - 4;
+    let absolutePos = (fromPos + 10 * fromPlayerI) % 40;
+    console.log(`absolute pos: ${absolutePos}`);
+    let toPos = ((absolutePos - 10 * toPlayerI) % 40 + 40) % 40;
+    return toPos + 4;
+}
+
+function getNextPlayer(players, playerInLine) {
+    let nextPlayerInLine = players.length + 1;
+    //get next higher playernum
+    players.forEach((player) => {
+        if (player.num !== null) {
+            if (player.num > playerInLine && player.num < nextPlayerInLine) {
+                nextPlayerInLine = player.num;
+            }
+        }
+    });
+
+    //if no bigger found
+    if (nextPlayerInLine == players.length + 1) {
+        //find smallest playernum
+        players.forEach((player) => {
+            if (player.num !== null) {
+                if (player.num < nextPlayerInLine) {
+                    nextPlayerInLine = player.num;
+                }
+            }
+        });
+    }
+    return nextPlayerInLine;
+}
+function setPreparationForInput2(gameObject, setNextPlayer) {
+    if (setNextPlayer) {
+        gameObject.playerInLine = getNextPlayer(gameObject.players, gameObject.playerInLine);
+    }
+    //reset temp
+    gameObject.temp = { dicevelue: 0 }
+    //role the dice for player in line
+    gameObject.temp.dicevelue = roleDice(gameObject.dice, gameObject.dicetemplate);
+    gameObject.players[
+        getPlayerIndexByNum(gameObject.players, gameObject.playerInLine)
+    ].lastDiceValue = gameObject.temp.dicevelue;
+};
+
 export function handleAction(gameObject, action) {
     let result = { ok: true };
     switch (action.type) {
@@ -105,6 +152,11 @@ export function handleAction(gameObject, action) {
         case 2:
             result = handleInput2(gameObject, action);
             break;
+        case 3:
+            result = handleInput3(gameObject, action);
+            break;
+        case 4: 
+            result = handleInput4(gameObject, action);
         default:
             result = { ok: false, msg: "action type dose not exist" };
             break;
@@ -145,7 +197,7 @@ function handleInput1(gameObject, action) {
             getPlayerIndexByNum(gameObject.players, lowestPlayerNumWithoutDiceValue)
         ].lastDiceValue = gameObject.temp.dicevelue;
 
-        //activate inputs bacause working is done
+        //input 1: next player have to role the dice, to decide the player how starts
         gameObject.inputState = 1;
 
         return { ok: true };
@@ -167,15 +219,11 @@ function handleInput1(gameObject, action) {
         }
     }
 
-    //role the dice for player in line
-    gameObject.temp.dicevelue = roleDice(gameObject.dice, gameObject.dicetemplate);
-    gameObject.players[
-        getPlayerIndexByNum(gameObject.players, playerNumWithHighestDiceValue)
-    ].lastDiceValue = gameObject.temp.dicevelue;
-
-    //activate inputs bacause working is done
-    gameObject.inputState = 2;
     gameObject.playerInLine = playerNumWithHighestDiceValue;
+    setPreparationForInput2(gameObject, false);
+
+    //input 2: the player with the higehest dice value has to start the game and role his dice value
+    gameObject.inputState = 2;
 
     return { ok: true };
 
@@ -193,9 +241,12 @@ function handleInput2(gameObject, action) {
 
     let parkingPawns = []
 
+    //deactivate inputs while working
+    gameObject.inputState = 0;
+
     for (let i = 0; i < gameObject.players[gameObject.playerInLine].pawns.length; i++) {
         const pawn = gameObject.players[gameObject.playerInLine].pawns[i];
-        // check which pown is on a parking field
+        // check which pawn is on a parking field
         if (pawn.pos >= 0 && pawn.pos <= 3) {
 
 
@@ -205,61 +256,184 @@ function handleInput2(gameObject, action) {
 
     if (parkingPawns.length > 0 && gameObject.players[gameObject.playerInLine].lastDiceValue == 6) {
 
-        let pownOnStartPosition = getPawnFromRelativePosition(gameObject, gameObject.playerInLine, 4);
+        let pawnOnStartPosition = getPawnFromRelativePosition(gameObject, gameObject.playerInLine, 4);
         //chack if starting field is free
-        if (pownOnStartPosition == -1) {
+        if (pawnOnStartPosition == -1) {
             let positionsWhenMoved = [];
             parkingPawns.forEach(element => {
                 positionsWhenMoved.push(4);
             });
             //all pawns on the parkingfields can be moved
-            gameObject.temp = { moveablePowns: parkingPawns, positionsWhenMoved: positionsWhenMoved };
+            gameObject.temp = { moveablepawns: parkingPawns, positionsWhenMoved: positionsWhenMoved };
+
+            //input 3: player has to select the pawn he want to move
+            gameObject.inputState = 3;
             return { ok: true };
 
 
         } else {
             let positionWhenMoved =
-                gameObject.players[gameObject.playerInLine].pawns[pownOnStartPosition].pos +
+                gameObject.players[gameObject.playerInLine].pawns[pawnOnStartPosition].pos +
                 gameObject.players[gameObject.playerInLine].lastDiceValue;
 
             let pawnOnPositionWhenMoved = getPawnFromRelativePosition(gameObject, gameObject.playerInLine, positionWhenMoved);
 
             if (pawnOnPositionWhenMoved == -1) {
                 //only the pawn that can blocks the startfield can be moved
-                gameObject.temp = { moveablePowns: [pownOnStartPosition], positionsWhenMoved: [positionWhenMoved] };
+                gameObject.temp = { moveablepawns: [pawnOnStartPosition], positionsWhenMoved: [positionWhenMoved] };
+
+                //input 3: player has to select the pawn he want to move
+                gameObject.inputState = 3;
+
                 return { ok: true };
             }
             else {
                 // no pawn can be moved
                 gameObject.temp = { msg: "es kann keine figur bewegt werden, da die figur die bewegt werden soll sollte, blockiert wird" };
+
+                //input 4: player accapt, that no pawn can be moved
+                gameObject.inputState = 4;
+
                 return { ok: true };
             }
         }
 
     }
     else {
-        let moveablePowns = []
+        let moveablepawns = []
         let positionsWhenMoved = [];
         for (let index = 0; index < gameObject.players[gameObject.playerInLine].pawns.length; index++) {
-            const pown = gameObject.players[gameObject.playerInLine].pawns[index];
-            if (pown.pos > 3) {
+            const pawn = gameObject.players[gameObject.playerInLine].pawns[index];
+            if (pawn.pos > 3) {
                 continue;
             }
 
-            let pawnOnPositionWhenMoved = getPawnFromRelativePosition(gameObject, gameObject.playerInLine, pown.pos + gameObject.players[gameObject.playerInLine].lastDiceValue);
+            let positionWhenMoved = pawn.pos + gameObject.players[gameObject.playerInLine].lastDiceValue
+            let pawnOnPositionWhenMoved = getPawnFromRelativePosition(gameObject, gameObject.playerInLine, positionWhenMoved);
             if (pawnOnPositionWhenMoved != -1) {
                 continue;
             }
 
-            moveablePowns.push(i);
-            positionsWhenMoved.push(pown.pos + gameObject.players[gameObject.playerInLine].lastDiceValue)
+            moveablepawns.push(i);
+            positionsWhenMoved.push(positionWhenMoved)
         }
 
-        gameObject.temp = { moveablePowns: parkingPawns, positionsWhenMoved: positionsWhenMoved };
+        if (moveablepawns.length == 0) {
+            // no pawn can be moved
+            gameObject.temp = { msg: "es kann keine figur bewegt werden, da die figur die bewegt werden soll sollte, blockiert wird" };
+
+            //input 4: player accapt, that no pawn can be moved
+            gameObject.inputState = 4;
+            return { ok: true };
+        }
+
+        gameObject.inputState = 3;
+        gameObject.temp = { moveablepawns: parkingPawns, positionsWhenMoved: positionsWhenMoved };
         return { ok: true };
     }
 }
 
-function handleInput2(){
-    
+//handle pawn move
+function handleInput3(gameObject, action) {
+
+
+    if (action.type != gameObject.inputState) {
+        return { ok: false, msg: "wrong action type" }
+    }
+
+    if (action.playerNum != gameObject.playerInLine) {
+        return { ok: false, msg: "wrong player" }
+    }
+
+    let pawnToMove = gameObject.temp.moveablepawns[action.value]
+
+    if (typeof pawnToMove == "undefined") {
+        return { ok: false, msg: "invalid aktion value", value: action.value };
+    }
+
+    //deactivate inputs while working
+    gameObject.inputState = 0;
+
+    //move pawn
+
+    let indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine)
+    let posToMoveTo = gameObject.temp.positionsWhenMoved[pawnToMove];
+    gameObject.players[indexOfPlayerInLine]
+        .pawns[pawnToMove].pos = posToMoveTo;
+
+
+
+    if (posToMoveTo < 44) {
+
+
+        //kick other pawns from field
+        for (let i = 0; i < gameObject.players.length; i++) {
+            const player = gameObject.players[i];
+            if ((i != indexOfPlayerInLine) && player.num) {
+                //need texting
+                let convertedPos = convertePosition(posToMoveTo, indexOfPlayerInLine, i)
+                let pawnIndex = getPawnFromRelativePosition(gameObject, i, convertedPos)
+                if (pawnIndex >= 0) {
+
+                    freePlaces = [0, 1, 2, 3];
+                    player.pawns.forEach((pawn) => {
+                        //if pawn on free place, remove it from freePlaces
+                        let indexInFreePlaces = freePlaces.indexOf(pawn.pos)
+                        if (indexInFreePlaces != -1) {
+
+                            freePlaces.splice(indexInFreePlaces);
+                        }
+
+                    });
+                    player.pawns[pawnIndex].pos = freePlaces[0];
+                }
+                player.pawns.forEach((pawn) => {
+                    if (pawn.pos == convertedPos) {
+
+                        //todo: pic pos form freeplaces to position kickt pawn
+                    }
+                })
+
+
+            }
+
+        }
+    }
+
+    //ckeck if player has won
+    let lastfields = [44, 45, 46, 47];
+    gameObject.players[indexOfPlayerInLine].pawns.forEach((pawn) => {
+        let i = lastfields.indexOf(pawn.pos)
+        if (i > -1) {
+            lastfields.splice(i);
+        }
+    })
+    if (lastfields.length == 0) {
+        gameObject.winner = gameObject.playerInLine;
+        gameObject.inputState = 5;
+        return { ok: true };
+    }
+
+    if (gameObject.temp.dicevelue == 6) {
+        setPreparationForInput2(gameObject, false);
+    } else {
+        setPreparationForInput2(gameObject, true);
+    }
+    gameObject.inputState = 2;
+
+    return { ok: true };
+}
+
+//handle accapt, that no pawn can be moved
+function handleInput4(gameObject, action) {
+
+    if (action.type != gameObject.inputState) {
+        return { ok: false, msg: "wrong action type" }
+    }
+
+    if (action.playerNum != gameObject.playerInLine) {
+        return { ok: false, msg: "wrong player" }
+    }
+
+    setPreparationForInput2(gameObject, true);
 }
