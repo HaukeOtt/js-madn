@@ -58,20 +58,164 @@
     {"playerNum": 1,"type": 2},
     {"playerNum": 1,"type": 4},
     {"playerNum": 2,"type": 2},
-    {"playerNum": 2,"type": 3, "value":0}
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 4},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 3, "value":0},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 4},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 3, "value":0},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 3, "value":0},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 3, "value":1},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":1},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":1},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 3, "value":0},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 3, "value":1},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":1},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":1},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 3, "value":0},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 3, "value":1},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":1},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":1},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 4},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":1},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 4},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":1},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 4},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":1},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 4},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":3},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 4},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 4},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":2},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 4},
+    {"playerNum": 1,"type": 2},
+    {"playerNum": 1,"type": 3, "value":0},
+    {"playerNum": 2,"type": 2},
+    {"playerNum": 2,"type": 4},
+    {"playerNum": 3,"type": 2},
+    {"playerNum": 3,"type": 3, "value":0}
     
+    
+   
 
-    
-    
-    
-    
-   
-   
-   
-    
-    
-   
 
-
+ 
 ]
+   
+    
+
+    
+    
+    
+    
+   
+   
+   
+    
+    
+   
+
+
+
 
