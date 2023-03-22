@@ -402,7 +402,7 @@ function handleInput3(gameObject, action) {
                 let pawnIndex = getPawnFromRelativePosition(gameObject, i, convertedPos)
                 if (pawnIndex >= 0) {
 
-                    freePlaces = [0, 1, 2, 3];
+                    let freePlaces = [0, 1, 2, 3];
                     player.pawns.forEach((pawn) => {
                         //if pawn on free place, remove it from freePlaces
                         let indexInFreePlaces = freePlaces.indexOf(pawn.pos)
