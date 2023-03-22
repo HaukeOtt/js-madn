@@ -496,7 +496,9 @@
     {"playerNum": 2,"type": 2},
     {"playerNum": 2,"type": 3, "value":0},
     {"playerNum": 3,"type": 2},
-    {"playerNum": 3,"type": 3, "value":0}
+    {"playerNum": 3,"type": 3, "value":0},
+    {"playerNum": 0,"type": 2},
+    {"playerNum": 0,"type": 3, "value":0}
    
 
 
