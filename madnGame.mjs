@@ -397,7 +397,7 @@ function handleInput3(gameObject, action) {
         for (let i = 0; i < gameObject.players.length; i++) {
             const player = gameObject.players[i];
             if ((i != indexOfPlayerInLine) && player.num) {
-                //need texting
+            
                 let convertedPos = convertePosition(posToMoveTo, indexOfPlayerInLine, i)
                 let pawnIndex = getPawnFromRelativePosition(gameObject, i, convertedPos)
                 if (pawnIndex >= 0) {
@@ -408,7 +408,7 @@ function handleInput3(gameObject, action) {
                         let indexInFreePlaces = freePlaces.indexOf(pawn.pos)
                         if (indexInFreePlaces != -1) {
 
-                            freePlaces.splice(indexInFreePlaces);
+                            freePlaces.splice(indexInFreePlaces,1);
                         }
 
                     });
