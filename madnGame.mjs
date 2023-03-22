@@ -432,7 +432,7 @@ function handleInput3(gameObject, action) {
     gameObject.players[indexOfPlayerInLine].pawns.forEach((pawn) => {
         let i = lastfields.indexOf(pawn.pos)
         if (i > -1) {
-            lastfields.splice(i);
+            lastfields.splice(i,1);
         }
     })
     if (lastfields.length == 0) {
