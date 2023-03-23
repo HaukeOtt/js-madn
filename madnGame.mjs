@@ -37,7 +37,7 @@ export function createGameObject(numOfPlayers, dicetemplate) {
     let gameObject = {
         playerInLine: 0,
         inputState: 1,
-        temp: { dicevelue: null, moveablepawns: null, positionsWhenMoved: null ,msg: null},
+        temp: { dicevelue: null, moveablepawns: null, positionsWhenMoved: null, msg: null },
         players: [],
         dice: dice,
         dicetemplate: dicetemplate,
@@ -65,9 +65,11 @@ export function createGameObject(numOfPlayers, dicetemplate) {
 
 function roleDice(dice, dicetemplate) {
     //if exist return dice-value from dicetemplate
-    if (dicetemplate[0]) {
-        let dicetemplateValue = dicetemplate.shift();
-        return dicetemplateValue;
+    if (dicetemplate) {
+        if (dicetemplate[0]) {
+            let dicetemplateValue = dicetemplate.shift();
+            return dicetemplateValue;
+        }
     }
 
     if (!dice) {
@@ -283,7 +285,7 @@ function handleInput2(gameObject, action) {
 
                 gameObject.temp.moveablepawns = [pawnOnStartPosition];
                 gameObject.temp.positionsWhenMoved = [positionWhenMoved];
-                
+
                 //input 3: player has to select the pawn he want to move
                 gameObject.inputState = 3;
 
@@ -354,7 +356,7 @@ function handleInput2(gameObject, action) {
         }
 
         gameObject.inputState = 3;
-        gameObject.temp.moveablepawns =  moveablepawns;
+        gameObject.temp.moveablepawns = moveablepawns;
         gameObject.temp.positionsWhenMoved = positionsWhenMoved;
         return { ok: true };
     }
@@ -397,7 +399,7 @@ function handleInput3(gameObject, action) {
         for (let i = 0; i < gameObject.players.length; i++) {
             const player = gameObject.players[i];
             if ((i != indexOfPlayerInLine) && player.num) {
-            
+
                 let convertedPos = convertePosition(posToMoveTo, indexOfPlayerInLine, i)
                 let pawnIndex = getPawnFromRelativePosition(gameObject, i, convertedPos)
                 if (pawnIndex >= 0) {
@@ -408,7 +410,7 @@ function handleInput3(gameObject, action) {
                         let indexInFreePlaces = freePlaces.indexOf(pawn.pos)
                         if (indexInFreePlaces != -1) {
 
-                            freePlaces.splice(indexInFreePlaces,1);
+                            freePlaces.splice(indexInFreePlaces, 1);
                         }
 
                     });
@@ -432,7 +434,7 @@ function handleInput3(gameObject, action) {
     gameObject.players[indexOfPlayerInLine].pawns.forEach((pawn) => {
         let i = lastfields.indexOf(pawn.pos)
         if (i > -1) {
-            lastfields.splice(i,1);
+            lastfields.splice(i, 1);
         }
     })
     if (lastfields.length == 0) {
