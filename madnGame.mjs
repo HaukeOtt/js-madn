@@ -180,6 +180,11 @@ function handleInput1(gameObject, action) {
         return { ok: false, msg: "wrong player" }
     }
 
+    gameObject.temp.msg = null;
+    gameObject.temp.dicevelue = null;
+    gameObject.temp.moveablepawns = null;
+    gameObject.temp.positionsWhenMoved = null;
+
     //deactivate inputs while working
     gameObject.inputState = 0;
 
@@ -243,6 +248,10 @@ function handleInput2(gameObject, action) {
         return { ok: false, msg: "wrong player" }
     }
 
+    gameObject.temp.msg = null;
+    gameObject.temp.moveablepawns = null;
+    gameObject.temp.positionsWhenMoved = null;
+
     let parkingPawns = []
 
     //deactivate inputs while working
@@ -257,8 +266,10 @@ function handleInput2(gameObject, action) {
             parkingPawns.push(i);
         }
     }
+//todo
 
-    if (parkingPawns.length > 0 && gameObject.players[gameObject.playerInLine].lastDiceValue == 6) {
+console.log("debug:");
+    if (parkingPawns.length > 0 && gameObject.players[getPlayerIndexByNum(gameObject.players,gameObject.playerInLine)].lastDiceValue == 6) {
 
         let pawnOnStartPosition = getPawnFromRelativePosition(gameObject, gameObject.playerInLine, 4);
         //chack if starting field is free
@@ -319,6 +330,7 @@ function handleInput2(gameObject, action) {
                 if (reasonForNoActionMoveablepawns == 0) {
                     reasonForNoActionMoveablepawns = 1;
                 }
+                console.log("reasonForNoActionMoveablepawns: " + reasonForNoActionMoveablepawns);
                 continue;
             }
 
@@ -328,6 +340,8 @@ function handleInput2(gameObject, action) {
             if (pawnOnPositionWhenMoved != (-1)) {
                 if (reasonForNoActionMoveablepawns != 2) {
                     reasonForNoActionMoveablepawns = 2;
+
+                    console.log("reasonForNoActionMoveablepawns: " + reasonForNoActionMoveablepawns);
                 }
                 continue;
             }
@@ -351,7 +365,7 @@ function handleInput2(gameObject, action) {
                 default:
                     break;
             }
-            gameObject.temp.msg = msg;
+
 
             //input 4: player accapt, that no pawn can be moved
             gameObject.inputState = 4;
@@ -377,6 +391,8 @@ function handleInput3(gameObject, action) {
         return { ok: false, msg: "wrong player" }
     }
 
+
+
     let pawnToMove = gameObject.temp.moveablepawns[action.value]
 
     if (typeof pawnToMove == "undefined") {
@@ -394,7 +410,7 @@ function handleInput3(gameObject, action) {
         .pawns[pawnToMove].pos = posToMoveTo;
 
 
-
+    //check if posToMoveTo is in renge of other pawns
     if (posToMoveTo < 44) {
 
 
@@ -432,6 +448,7 @@ function handleInput3(gameObject, action) {
         }
     }
 
+
     //ckeck if player has won
     let lastfields = [44, 45, 46, 47];
     gameObject.players[indexOfPlayerInLine].pawns.forEach((pawn) => {
@@ -443,6 +460,12 @@ function handleInput3(gameObject, action) {
     if (lastfields.length == 0) {
         gameObject.winner = gameObject.playerInLine;
         gameObject.inputState = 5;
+
+
+        gameObject.temp.dicevelue = null;
+        gameObject.temp.msg = null;
+        gameObject.temp.moveablepawns = null;
+        gameObject.temp.positionsWhenMoved = null;
         return { ok: true };
     }
 
@@ -454,6 +477,10 @@ function handleInput3(gameObject, action) {
     }
     gameObject.inputState = 2;
 
+
+    gameObject.temp.msg = null;
+    gameObject.temp.moveablepawns = null;
+    gameObject.temp.positionsWhenMoved = null;
     return { ok: true };
 }
 
