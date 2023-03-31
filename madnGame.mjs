@@ -416,7 +416,7 @@ function handleInput3(gameObject, action) {
         //kick other pawns from field
         for (let i = 0; i < gameObject.players.length; i++) {
             const player = gameObject.players[i];
-            if ((i != indexOfPlayerInLine) && player.num) {
+            if ((i != indexOfPlayerInLine) && (player.num !== null)) {
 
                 let convertedPos = convertePosition(posToMoveTo, indexOfPlayerInLine, i)
                 let pawnIndex = getPawnFromRelativePosition(gameObject, i, convertedPos)
