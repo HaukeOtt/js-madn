@@ -266,9 +266,7 @@ function handleInput2(gameObject, action) {
             parkingPawns.push(i);
         }
     }
-//todo
 
-console.log("debug:");
     if (parkingPawns.length > 0 && gameObject.players[getPlayerIndexByNum(gameObject.players,gameObject.playerInLine)].lastDiceValue == 6) {
 
         let pawnOnStartPosition = getPawnFromRelativePosition(gameObject, gameObject.playerInLine, 4);
@@ -368,6 +366,7 @@ console.log("debug:");
 
 
             //input 4: player accapt, that no pawn can be moved
+            gameObject.temp.msg = msg;
             gameObject.inputState = 4;
             return { ok: true };
         }
