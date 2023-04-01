@@ -58,7 +58,7 @@ export function createGameObject(numOfPlayers, dicetemplate) {
 
     // role dice and store
     gameObject.temp.dicevelue = roleDice(gameObject.dice, gameObject.dicetemplate);
-    
+
     const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine);
     gameObject.players[indexOfPlayerInLine].lastDiceValue = gameObject.temp.dicevelue;
 
@@ -269,9 +269,11 @@ function handleInput2(gameObject, action) {
         }
     }
 
+    const pawnOnStartPosition = getPawnFromRelativePosition(gameObject, indexOfPlayerInLine, 4);
+
     if (parkingPawns.length > 0 && gameObject.players[indexOfPlayerInLine].lastDiceValue == 6) {
 
-        let pawnOnStartPosition = getPawnFromRelativePosition(gameObject, indexOfPlayerInLine, 4);
+
         //chack if starting field is free
         if (pawnOnStartPosition == -1) {
             let positionsWhenMoved = [];
@@ -288,7 +290,40 @@ function handleInput2(gameObject, action) {
             return { ok: true };
 
 
-        } else {
+        }
+        let positionWhenMoved =
+            gameObject.players[indexOfPlayerInLine].pawns[pawnOnStartPosition].pos +
+            gameObject.players[indexOfPlayerInLine].lastDiceValue;
+
+        let pawnOnPositionWhenMoved = getPawnFromRelativePosition(gameObject, indexOfPlayerInLine, positionWhenMoved);
+
+        if (pawnOnPositionWhenMoved == -1) {
+            //only the pawn that can blocks the startfield can be moved
+
+            gameObject.temp.moveablepawns = [pawnOnStartPosition];
+            gameObject.temp.positionsWhenMoved = [positionWhenMoved];
+
+            //input 3: player has to select the pawn he want to move
+            gameObject.inputState = 3;
+
+            return { ok: true };
+        }
+        else {
+            // no pawn can be moved
+            gameObject.temp.msg = "es kann keine figur bewegt werden, da die figur die bewegt werden soll sollte, blockiert wird";
+
+            //input 4: player accapt, that no pawn can be moved
+            gameObject.inputState = 4;
+
+            return { ok: true };
+
+        }
+
+    }
+    else {
+
+
+        if (pawnOnStartPosition != -1 && parkingPawns.length > 0) {
             let positionWhenMoved =
                 gameObject.players[indexOfPlayerInLine].pawns[pawnOnStartPosition].pos +
                 gameObject.players[indexOfPlayerInLine].lastDiceValue;
@@ -314,11 +349,9 @@ function handleInput2(gameObject, action) {
                 gameObject.inputState = 4;
 
                 return { ok: true };
+
             }
         }
-
-    }
-    else {
         let moveablepawns = []
         let positionsWhenMoved = [];
         let reasonForNoActionMoveablepawns = 0;
