@@ -37,7 +37,7 @@ for (let i = 0; i < test0.length; i++) {
         });
     }
     console.table(playersinfo);
-    console.log({ playerInLine: gameObject.playerInLine,temp: gameObject.temp })
+    console.log({ playerInLine: gameObject.playerInLine,expectedInput: gameObject.inputState ,temp: gameObject.temp })
 
     if (result.ok == false) {
         console.log(`\x1b[31m${"unvalid action:"}\x1b[0m`);
