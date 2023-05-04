@@ -41,13 +41,18 @@ export function createGameObject(numOfPlayers, dicetemplate) {
         players: [],
         dice: dice,
         dicetemplate: dicetemplate,
-        winner: -1
+        winner: -1,
+        lastInputWarsNumberOne: false
     };
 
     //setting standart gameObject.players
     for (let i = 0; i < numOfPlayslots; i++) {
         //create standart playerproperties
-        gameObject.players[i] = { num: playerNums[i], pawns: [], lastDiceValue: null };
+        gameObject.players[i] = {
+            num: playerNums[i], pawns: [], lastDiceValue: null, stats: {
+                won: false, lostPawns: 0, kicktPawns: 0, roledDices: 0
+            }
+        };
 
         //create standart pawnpositions
         for (let j = 0; j < numOfPawns; j++) {
@@ -57,6 +62,7 @@ export function createGameObject(numOfPlayers, dicetemplate) {
 
 
     // role dice and store
+    
     gameObject.temp.dicevelue = roleDice(gameObject.dice, gameObject.dicetemplate);
 
     const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine);
@@ -137,6 +143,7 @@ function getNextPlayer(players, playerInLine) {
     }
     return nextPlayerInLine;
 }
+
 function setPreparationForInput2(gameObject, setNextPlayer) {
     if (setNextPlayer) {
         gameObject.playerInLine = getNextPlayer(gameObject.players, gameObject.playerInLine);
@@ -189,6 +196,12 @@ function handleInput1(gameObject, action) {
 
     //deactivate inputs while working
     gameObject.inputState = 0;
+
+    const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine);
+
+    //update stats
+    gameObject.lastInputWarsNumberOne = true;
+    gameObject.players[indexOfPlayerInLine].stats.roledDices++;
 
     //find player with the lowest num, that has not roled the dice yet.
     let lowestPlayerNumWithoutDiceValue = null;
@@ -250,15 +263,21 @@ function handleInput2(gameObject, action) {
         return { ok: false, msg: "wrong player" }
     }
 
+    //deactivate inputs while working
+    gameObject.inputState = 0;
+
     gameObject.temp.msg = null;
     gameObject.temp.moveablepawns = null;
     gameObject.temp.positionsWhenMoved = null;
 
-    let parkingPawns = []
-    const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine)
+    let parkingPawns = [];
+    const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine);
 
-    //deactivate inputs while working
-    gameObject.inputState = 0;
+    //update stats
+    if (gameObject.lastInputWarsNumberOne) {
+        gameObject.players[indexOfPlayerInLine].stats.roledDices++;
+        gameObject.lastInputWarsNumberOne = false;
+    }
 
     // check which pawn is on a parking field
     for (let i = 0; i < gameObject.players[indexOfPlayerInLine].pawns.length; i++) {
@@ -322,7 +341,6 @@ function handleInput2(gameObject, action) {
     }
     else {
 
-
         if (pawnOnStartPosition != -1 && parkingPawns.length > 0) {
             let positionWhenMoved =
                 gameObject.players[indexOfPlayerInLine].pawns[pawnOnStartPosition].pos +
@@ -349,7 +367,6 @@ function handleInput2(gameObject, action) {
                 gameObject.inputState = 4;
 
                 return { ok: true };
-
             }
         }
         let moveablepawns = []
@@ -399,7 +416,6 @@ function handleInput2(gameObject, action) {
                     break;
             }
 
-
             //input 4: player accapt, that no pawn can be moved
             gameObject.temp.msg = msg;
             gameObject.inputState = 4;
@@ -427,7 +443,7 @@ function handleInput3(gameObject, action) {
 
 
 
-    let pawnToMove = gameObject.temp.moveablepawns[action.value]
+    let pawnToMove = gameObject.temp.moveablepawns[action.value];
 
     if (typeof pawnToMove == "undefined") {
         return { ok: false, msg: "invalid aktion value", value: action.value };
@@ -436,9 +452,9 @@ function handleInput3(gameObject, action) {
     //deactivate inputs while working
     gameObject.inputState = 0;
 
-    //move pawn
+    const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine);
 
-    const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine)
+    //move pawn
     let posToMoveTo = gameObject.temp.positionsWhenMoved[action.value];
     gameObject.players[indexOfPlayerInLine]
         .pawns[pawnToMove].pos = posToMoveTo;
@@ -468,15 +484,11 @@ function handleInput3(gameObject, action) {
 
                     });
                     player.pawns[pawnIndex].pos = freePlaces[0];
+
+                    //update stats
+                    player.stats.lostPawns++
+                    gameObject.players[indexOfPlayerInLine].stats.kicktPawns++
                 }
-                player.pawns.forEach((pawn) => {
-                    if (pawn.pos == convertedPos) {
-
-                        //todo: pic pos form freeplaces to position kickt pawn
-                    }
-                })
-
-
             }
 
         }
@@ -492,6 +504,7 @@ function handleInput3(gameObject, action) {
         }
     })
     if (lastfields.length == 0) {
+        gameObject.players[indexOfPlayerInLine].stats.won = true;
         gameObject.winner = gameObject.playerInLine;
         gameObject.inputState = 5;
 
@@ -528,6 +541,12 @@ function handleInput4(gameObject, action) {
     if (action.playerNum != gameObject.playerInLine) {
         return { ok: false, msg: "wrong player" }
     }
+
+    const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine)
+
+    //update stats
+    gameObject.players[indexOfPlayerInLine].stats.roledDices++;
+
 
     setPreparationForInput2(gameObject, true);
 
