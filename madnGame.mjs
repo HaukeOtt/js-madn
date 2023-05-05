@@ -375,7 +375,7 @@ function handleInput2(gameObject, action) {
                 if (reasonForNoActionMoveablepawns == 0) {
                     reasonForNoActionMoveablepawns = 1;
                 }
-                console.log("reasonForNoActionMoveablepawns: " + reasonForNoActionMoveablepawns);
+                //console.log("reasonForNoActionMoveablepawns: " + reasonForNoActionMoveablepawns);
                 continue;
             }
 
@@ -386,7 +386,7 @@ function handleInput2(gameObject, action) {
                 if (reasonForNoActionMoveablepawns != 2) {
                     reasonForNoActionMoveablepawns = 2;
 
-                    console.log("reasonForNoActionMoveablepawns: " + reasonForNoActionMoveablepawns);
+                    //console.log("reasonForNoActionMoveablepawns: " + reasonForNoActionMoveablepawns);
                 }
                 continue;
             }
@@ -511,7 +511,7 @@ function handleInput3(gameObject, action) {
         return { ok: true };
     }
 
-    console.log(`dicevelue:${gameObject.temp.dicevelue}`)
+    //console.log(`dicevelue:${gameObject.temp.dicevelue}`)
     if (gameObject.temp.dicevelue == 6) {
         setPreparationForInput2(gameObject, false);
     } else {
