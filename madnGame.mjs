@@ -543,3 +543,16 @@ function handleInput4(gameObject, action) {
 
     return { ok: true }
 }
+
+export function getPlayerStats(gameObject){
+    
+    let playersStats = [];
+
+    gameObject.players.forEach(player => {
+        if (player.num !== null) {
+            playersStats[player.num] = player.stats;
+        }
+    });
+    
+    return playersStats;
+}
