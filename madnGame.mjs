@@ -42,7 +42,6 @@ export function createGameObject(numOfPlayers, dicetemplate) {
         dice: dice,
         dicetemplate: dicetemplate,
         winner: -1,
-        lastInputWarsNumberOne: false
     };
 
     //setting standart gameObject.players
@@ -200,7 +199,6 @@ function handleInput1(gameObject, action) {
     const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine);
 
     //update stats
-    gameObject.lastInputWarsNumberOne = true;
     gameObject.players[indexOfPlayerInLine].stats.roledDices++;
 
     //find player with the lowest num, that has not roled the dice yet.
@@ -274,10 +272,7 @@ function handleInput2(gameObject, action) {
     const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine);
 
     //update stats
-    if (gameObject.lastInputWarsNumberOne) {
         gameObject.players[indexOfPlayerInLine].stats.roledDices++;
-        gameObject.lastInputWarsNumberOne = false;
-    }
 
     // check which pawn is on a parking field
     for (let i = 0; i < gameObject.players[indexOfPlayerInLine].pawns.length; i++) {
@@ -541,12 +536,6 @@ function handleInput4(gameObject, action) {
     if (action.playerNum != gameObject.playerInLine) {
         return { ok: false, msg: "wrong player" }
     }
-
-    const indexOfPlayerInLine = getPlayerIndexByNum(gameObject.players, gameObject.playerInLine)
-
-    //update stats
-    gameObject.players[indexOfPlayerInLine].stats.roledDices++;
-
 
     setPreparationForInput2(gameObject, true);
 
