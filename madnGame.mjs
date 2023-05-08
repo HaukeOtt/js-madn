@@ -37,7 +37,7 @@ export function createGameObject(numOfPlayers, dicetemplate) {
     let gameObject = {
         playerInLine: 0,
         inputState: 1,
-        temp: { dicevelue: null, moveablepawns: null, positionsWhenMoved: null, msg: null },
+        temp: { dicevelue: null, moveablepawns: null, positionsWhenMoved: null, msg: null,data: null},
         players: [],
         dice: dice,
         dicetemplate: dicetemplate,
