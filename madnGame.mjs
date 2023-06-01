@@ -324,7 +324,7 @@ function handleInput2(gameObject, action) {
         }
         else {
             // no pawn can be moved
-            gameObject.temp.msg = "es kann keine figur bewegt werden, da die figur die bewegt werden soll sollte, blockiert wird";
+            gameObject.temp.msg = "Es kann keine Figur bewegt werden, da die Figur die bewegt werden sollte, blockiert wird";
 
             //input 4: player accapt, that no pawn can be moved
             gameObject.inputState = 4;
@@ -356,7 +356,7 @@ function handleInput2(gameObject, action) {
             }
             else {
                 // no pawn can be moved
-                gameObject.temp.msg = "es kann keine figur bewegt werden, da die figur die bewegt werden soll sollte, blockiert wird";
+                gameObject.temp.msg = "Es kann keine Figur bewegt werden, da die Figur die bewegt werden sollte, blockiert wird";
 
                 //input 4: player accapt, that no pawn can be moved
                 gameObject.inputState = 4;
@@ -405,7 +405,7 @@ function handleInput2(gameObject, action) {
                     msg = "keine Figur auf dem Spielfeld, die bewegt werden kann";
                     break;
                 case 2:
-                    msg = "es kann keine Figur bewegt werden, da die Figur die sich bewegt werden kann, blockiert wird";
+                    msg = "es kann keine Figur bewegt werden, da die Figur die bewegt werden kann, blockiert wird";
                     break;
                 default:
                     break;
